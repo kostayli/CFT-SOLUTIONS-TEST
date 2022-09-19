@@ -1,0 +1,8 @@
+http://localhost:8080/api/product?cost=7600&manufacturer=xui&nametype=notebook&countstock=9&additiondescription=xuidsfds
+
+insert into type values(1,'Диагональ','Ноутбук');
+
+create table product (id bigint not null, addition_description varchar(255), cost integer, count_stock integer, id_type integer not null, manufacturer varchar(255), primary key (id));
+create table type (id integer not null, name_description String , name_type varchar(255), primary key (id));
+create sequence hibernate_sequence start with 1 increment by 1;
+INSERT INTO type VALUES(1, '["JavaScript", "ES2015", "JSON"]','Настольные компьютеры');
