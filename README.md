@@ -1,1 +1,1 @@
-# CFT-SOLUTIONS-TEST
+#Решение лаборатории SHIFT от цфт
