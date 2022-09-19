@@ -93,7 +93,7 @@ public class TypeController {
         }
     }
 
-    @ApiOperation(value = "Удаление товара по идентификатору")
+    @ApiOperation(value = "Удаление типа по идентификатору")
     @DeleteMapping("/swagger/type/{id}")
     public ResponseEntity<HttpStatus> deleteProductApi(@PathVariable("id") long id) {
         try {

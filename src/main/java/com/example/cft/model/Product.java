@@ -1,5 +1,7 @@
 package com.example.cft.model;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,19 +11,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
+    @ApiModelProperty(name = "idType", value = "1", notes = "Идентификатор типа товара")
     @Column(name = "idType")
     private long idType;
-
+    @ApiModelProperty(name = "manufacturer", value = "GPB", notes = "Название производителя товара")
     @Column(name = "manufacturer")
     private String manufacturer;
-
+    @ApiModelProperty(name = "cost", value = "999", notes = "Стоимость товара")
     @Column(name = "cost")
     private float cost;
-
+    @ApiModelProperty(name = "countStock", value = "9", notes = "Количество единиц продукции на складе")
     @Column(name = "countStock")
     private int countStock;
-
+    @ApiModelProperty(name = "additionDescription", value = "моноблок", notes = "Дополнительное свойство товара")
     @Column(name = "additionDescription")
     private String additionDescription;
 

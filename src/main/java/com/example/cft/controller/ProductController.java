@@ -7,6 +7,7 @@ import com.example.cft.model.TypeProduct;
 import com.example.cft.repository.RepositoryType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +72,9 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
+
     public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
+
         Optional<Product> TestData = RepositoryProduct.findById(id);
         if (TestData.isPresent()) {
             return new ResponseEntity<>(TestData.get(), HttpStatus.OK);
@@ -79,9 +82,11 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @ApiOperation(value = "Просмотр товара по идентификатору")
     @GetMapping("/swagger/product/{id}")
-    public ResponseEntity<Product> getProductByIdApi(@PathVariable("id") long id) {
+    public ResponseEntity<Product> getProductByIdApi(@PathVariable("id") long id)
+    {
         Optional<Product> TestData = RepositoryProduct.findById(id);
         if (TestData.isPresent()) {
             return new ResponseEntity<>(TestData.get(), HttpStatus.OK);
