@@ -21,13 +21,13 @@ import com.example.cft.utils.DiscriptionEncoder;
         tags = {"Тип товаров"})
 public class TypeController {
     @Autowired
-    RepositoryType RepositoryType;
+    RepositoryType repositoryType;
 
     @ApiOperation(value = "Просмотр всех типов")
     @GetMapping("/swagger/type")
     public ResponseEntity<List<TypeProduct>> getAllProductTypeApi() {
         try {
-            List<TypeProduct> Products = RepositoryType.findAll();
+            List<TypeProduct> Products = repositoryType.findAll();
 
             if (Products.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -41,7 +41,7 @@ public class TypeController {
     @ApiOperation(value = "Отображение информации о типе по идентификатору")
     @GetMapping("/swagger/type/{id}")
     public ResponseEntity<TypeProduct> getProductByIdApi(@PathVariable("id") long id) {
-        Optional<TypeProduct> TestData = RepositoryType.findById(id);
+        Optional<TypeProduct> TestData = repositoryType.findById(id);
         if (TestData.isPresent()) {
             return new ResponseEntity<>(TestData.get(), HttpStatus.OK);
         } else {
@@ -50,13 +50,13 @@ public class TypeController {
     }
     @ApiOperation(value = "Создание нового типа с подкатегориями")
     @PostMapping("/swagger/type/variants")
-    public ResponseEntity<TypeProduct> createTypeVariantsApi(String name_description, String name_type,
+    public ResponseEntity<TypeProduct> createTypeVariantsApi(String nameDescription, String nameType,
                                                     String variants) {
         DiscriptionEncoder temp = new DiscriptionEncoder(variants);
-        String description_features = temp.setMassiveParam();
+        String descriptionFeatures = temp.setMassiveParam();
         try {
-            TypeProduct _product = RepositoryType
-                    .save(new TypeProduct(name_description,name_type,description_features));
+            TypeProduct _product = repositoryType
+                    .save(new TypeProduct(nameDescription,nameType,descriptionFeatures));
             return new ResponseEntity<>(_product, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -64,13 +64,13 @@ public class TypeController {
     }
     @ApiOperation(value = "Создание нового типа с параметром определённого типа данных")
     @PostMapping("/swagger/type/type")
-    public ResponseEntity<TypeProduct> createTypeApi(String name_description, String name_type,
+    public ResponseEntity<TypeProduct> createTypeApi(String nameDescription, String nameType,
                                                             String type) {
         DiscriptionEncoder temp = new DiscriptionEncoder(type);
-        String description_features = temp.setValueParam();
+        String descriptionFeatures = temp.setValueParam();
         try {
-            TypeProduct _product = RepositoryType
-                    .save(new TypeProduct(name_description,name_type,description_features));
+            TypeProduct _product = repositoryType
+                    .save(new TypeProduct(nameDescription,nameType,descriptionFeatures));
             return new ResponseEntity<>(_product, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -79,15 +79,15 @@ public class TypeController {
     @ApiOperation(value = "Редактирование типа")
     @PutMapping("/swagger/type/{id}")
     public ResponseEntity<TypeProduct> updateProductApi(@PathVariable("id") long id, @RequestBody TypeProduct typeProdcut) {
-        Optional<TypeProduct> TestData = RepositoryType.findById(id);
+        Optional<TypeProduct> testData = repositoryType.findById(id);
 
-        if (TestData.isPresent()) {
-            TypeProduct _typeProduct = TestData.get();
+        if (testData.isPresent()) {
+            TypeProduct _typeProduct = testData.get();
             _typeProduct.setId(typeProdcut.getId());
             _typeProduct.setNameType(typeProdcut.getNameType());
             _typeProduct.setDescriptionFeatures(typeProdcut.getDescriptionFeatures());
 
-            return new ResponseEntity<>(RepositoryType.save(_typeProduct), HttpStatus.OK);
+            return new ResponseEntity<>(repositoryType.save(_typeProduct), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -97,7 +97,7 @@ public class TypeController {
     @DeleteMapping("/swagger/type/{id}")
     public ResponseEntity<HttpStatus> deleteProductApi(@PathVariable("id") long id) {
         try {
-            RepositoryType.deleteById(id);
+            repositoryType.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

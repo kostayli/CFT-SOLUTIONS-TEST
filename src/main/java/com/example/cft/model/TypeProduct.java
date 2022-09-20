@@ -26,7 +26,7 @@ public class TypeProduct {
         this.nameDescription = nameDescription;
         this.descriptionFeatures=descriptionFeatures;
     }
-    //ГЕТТЕРЫ
+
     public long getId() {
         return id;
     }
@@ -42,7 +42,7 @@ public class TypeProduct {
     public String getDescriptionFeatures() {
         return descriptionFeatures;
     }
-    //СЕТТЕРЫ
+
     public void setNameType(String nameType) {
         this.nameType = nameType;
     }

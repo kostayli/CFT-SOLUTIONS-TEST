@@ -7,7 +7,6 @@ import com.example.cft.model.TypeProduct;
 import com.example.cft.repository.RepositoryType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,20 +36,20 @@ import com.example.cft.utils.DiscriptionEncoder;
 public class ProductController {
 
     @Autowired
-    RepositoryProduct RepositoryProduct;
+    public RepositoryProduct repositoryProduct;
     @Autowired
-    RepositoryType RepositoryType;
+    public RepositoryType repositoryType;
 
 
     @GetMapping("/product")
-    public ResponseEntity<List<Product>> getAllProduct(@RequestParam(required = false) String text) {
+    public ResponseEntity<List<Product>> getAllProduct() {
         try {
-            List<Product> Products = RepositoryProduct.findAll();
-            if (Products.isEmpty()) {
+            List<Product> products = repositoryProduct.findAll();
+            if (products.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            return new ResponseEntity<>(Products, HttpStatus.OK);
+            return new ResponseEntity<>(products, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -59,13 +58,13 @@ public class ProductController {
     @GetMapping("/swagger/product")
     public ResponseEntity<List<Product>> getAllProductApi() {
         try {
-            List<Product> Products = RepositoryProduct.findAll();
+            List<Product> products = repositoryProduct.findAll();
 
-            if (Products.isEmpty()) {
+            if (products.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            return new ResponseEntity<>(Products, HttpStatus.OK);
+            return new ResponseEntity<>(products, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -75,9 +74,9 @@ public class ProductController {
 
     public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
 
-        Optional<Product> TestData = RepositoryProduct.findById(id);
-        if (TestData.isPresent()) {
-            return new ResponseEntity<>(TestData.get(), HttpStatus.OK);
+        Optional<Product> testData = repositoryProduct.findById(id);
+        if (testData.isPresent()) {
+            return new ResponseEntity<>(testData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -87,9 +86,9 @@ public class ProductController {
     @GetMapping("/swagger/product/{id}")
     public ResponseEntity<Product> getProductByIdApi(@PathVariable("id") long id)
     {
-        Optional<Product> TestData = RepositoryProduct.findById(id);
-        if (TestData.isPresent()) {
-            return new ResponseEntity<>(TestData.get(), HttpStatus.OK);
+        Optional<Product> testData = repositoryProduct.findById(id);
+        if (testData.isPresent()) {
+            return new ResponseEntity<>(testData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -98,12 +97,12 @@ public class ProductController {
     @GetMapping("/swagger/product/type/{type}")
     public ResponseEntity<List<Product>> getProductByTypeApi(@PathVariable("type") String type) {
 
-        Optional<TypeProduct> TestData = RepositoryType.findByNameType(type);
-        TypeProduct _type = TestData.get();
+        Optional<TypeProduct> testData = repositoryType.findByNameType(type);
+        TypeProduct _type = testData.get();
 
-        List<Product> Products = RepositoryProduct.findAllByIdType(_type.getId());
-        if (TestData.isPresent()) {
-            return new ResponseEntity<>(Products, HttpStatus.OK);
+        List<Product> products = repositoryProduct.findAllByIdType(_type.getId());
+        if (testData.isPresent()) {
+            return new ResponseEntity<>(products, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -111,10 +110,10 @@ public class ProductController {
 
     @PostMapping(value = {"/product/", "/product"})
     public ResponseEntity<Product> createProduct(@RequestParam Map<String,String> allRequestParam) {
-        Optional<TypeProduct> TestData = RepositoryType.findByNameType(allRequestParam.get("nametype"));
-        TypeProduct _type = TestData.get();
+        Optional<TypeProduct> testData = repositoryType.findByNameType(allRequestParam.get("nametype"));
+        TypeProduct _type = testData.get();
         try {
-            Product _product = RepositoryProduct
+            Product _product = repositoryProduct
                     .save(new Product(_type.getId(), allRequestParam.get("manufacturer"),
                             Integer.parseInt(allRequestParam.get("cost")),
                             Integer.parseInt(allRequestParam.get("countstock")),
@@ -129,8 +128,8 @@ public class ProductController {
     @PostMapping(value = {"swagger/product"})
     public ResponseEntity<Product> createProductApi(String nametype, String manufacturer, float cost,
                                                     int countstock, String additiondescription) {
-        Optional<TypeProduct> TestData = RepositoryType.findByNameType(nametype);
-        TypeProduct _type = TestData.get();
+        Optional<TypeProduct> testData = repositoryType.findByNameType(nametype);
+        TypeProduct _type = testData.get();
         String checkText=_type.getDescriptionFeatures().replaceAll("\\s+","");
         try {
             if(checkText.contains("variants")){
@@ -140,7 +139,7 @@ public class ProductController {
                 String [] massiveParam = descriptionEncoder.getMassiveParam(param);
                 for(int i=0;i<massiveParam.length;i++){
                     if((additiondescription.contains(massiveParam[i])) && (additiondescription.length()==massiveParam[i].length())){
-                        Product _product = RepositoryProduct
+                        Product _product = repositoryProduct
                                 .save(new Product(_type.getId(), manufacturer, cost, countstock, additiondescription));
                         return new ResponseEntity<>(_product, HttpStatus.CREATED);
                     }
@@ -156,7 +155,7 @@ public class ProductController {
                     try{
                         float number;
                         number = Float.parseFloat(additiondescription);
-                        Product _product = RepositoryProduct
+                        Product _product = repositoryProduct
                                 .save(new Product(_type.getId(), manufacturer, cost, countstock, additiondescription));
                         return new ResponseEntity<>(_product, HttpStatus.CREATED);
                     }catch (Exception e){
@@ -167,7 +166,7 @@ public class ProductController {
                     try{
                         int number;
                         number = Integer.parseInt(additiondescription);
-                        Product _product = RepositoryProduct
+                        Product _product = repositoryProduct
                                 .save(new Product(_type.getId(), manufacturer, cost, countstock, additiondescription));
                         return new ResponseEntity<>(_product, HttpStatus.CREATED);
                     }catch (Exception e){
@@ -176,7 +175,7 @@ public class ProductController {
 
                 }
                 else if(param.contains("string")){
-                    Product _product = RepositoryProduct
+                    Product _product = repositoryProduct
                             .save(new Product(_type.getId(), manufacturer, cost, countstock, additiondescription));
                     return new ResponseEntity<>(_product, HttpStatus.CREATED);
                 }
@@ -195,7 +194,7 @@ public class ProductController {
 
     @PutMapping("/product/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") long id, @RequestBody Product product) {
-        Optional<Product> TestData = RepositoryProduct.findById(id);
+        Optional<Product> TestData = repositoryProduct.findById(id);
         if (TestData.isPresent()) {
             Product _product = TestData.get();
             _product.setIdType(product.getIdType());
@@ -203,7 +202,7 @@ public class ProductController {
             _product.setCountStock(product.getCountStock());
             _product.setManufacturer(product.getManufacturer());
             _product.setAdditionDescription(product.getAdditionDescription());
-            return new ResponseEntity<>(RepositoryProduct.save(_product), HttpStatus.OK);
+            return new ResponseEntity<>(repositoryProduct.save(_product), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -211,7 +210,7 @@ public class ProductController {
     @ApiOperation(value = "Редактирование товара")
     @PutMapping("/swagger/product/{id}")
     public ResponseEntity<Product> updateProductApi(@PathVariable("id") long id, @RequestBody Product product) {
-        Optional<Product> TestData = RepositoryProduct.findById(id);
+        Optional<Product> TestData = repositoryProduct.findById(id);
 
         if (TestData.isPresent()) {
             Product _product = TestData.get();
@@ -220,7 +219,7 @@ public class ProductController {
             _product.setCountStock(product.getCountStock());
             _product.setManufacturer(product.getManufacturer());
             _product.setAdditionDescription(product.getAdditionDescription());
-            return new ResponseEntity<>(RepositoryProduct.save(_product), HttpStatus.OK);
+            return new ResponseEntity<>(repositoryProduct.save(_product), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -229,7 +228,7 @@ public class ProductController {
     @DeleteMapping("/product/{id}")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable("id") long id) {
         try {
-            RepositoryProduct.deleteById(id);
+            repositoryProduct.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -239,7 +238,7 @@ public class ProductController {
     @DeleteMapping("/swagger/product/{id}")
     public ResponseEntity<HttpStatus> deleteProductApi(@PathVariable("id") long id) {
         try {
-            RepositoryProduct.deleteById(id);
+            repositoryProduct.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -249,7 +248,7 @@ public class ProductController {
     @DeleteMapping("/product")
     public ResponseEntity<HttpStatus> deleteAllProduct() {
         try {
-            RepositoryProduct.deleteAll();
+            repositoryProduct.deleteAll();
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -259,7 +258,7 @@ public class ProductController {
     @DeleteMapping("/swagger/product")
     public ResponseEntity<HttpStatus> deleteAllProductApi() {
         try {
-            RepositoryProduct.deleteAll();
+            repositoryProduct.deleteAll();
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
