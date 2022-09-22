@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface RepositoryType extends JpaRepository<TypeProduct, Long> {
+public interface IRepositoryType extends JpaRepository<TypeProduct, Long> {
 
 
     Optional<TypeProduct> findByNameType(String nameType);

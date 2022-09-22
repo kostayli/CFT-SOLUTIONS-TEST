@@ -71,17 +71,17 @@ public class DiscriptionEncoder {
         return pairs;
     }
 
-    public String setMassiveParam(){
+    public String getMassiveQuery(){
         return "{variants:["+this.text+"]}";
     }
-    public String setMassiveParam(String text){
+    public String getMassiveQuery(String text){
         return "{variants:["+text+"]}";
     }
 
-    public String setValueParam(String text){
+    public String getTypeQuery(String text){
         return "{type:"+text+"}";
     }
-    public String setValueParam(){
+    public String getTypeQuery(){
         return "{type:"+this.text+"}";
     }
 

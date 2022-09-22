@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.cft.model.TypeProduct;
-import com.example.cft.repository.RepositoryType;
+import com.example.cft.repository.IRepositoryType;
 import com.example.cft.utils.DiscriptionEncoder;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -21,13 +21,13 @@ import com.example.cft.utils.DiscriptionEncoder;
         tags = {"Тип товаров"})
 public class TypeController {
     @Autowired
-    RepositoryType repositoryType;
+    IRepositoryType IRepositoryType;
 
     @ApiOperation(value = "Просмотр всех типов")
     @GetMapping("/swagger/type")
     public ResponseEntity<List<TypeProduct>> getAllProductTypeApi() {
         try {
-            List<TypeProduct> Products = repositoryType.findAll();
+            List<TypeProduct> Products = IRepositoryType.findAll();
 
             if (Products.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -41,7 +41,7 @@ public class TypeController {
     @ApiOperation(value = "Отображение информации о типе по идентификатору")
     @GetMapping("/swagger/type/{id}")
     public ResponseEntity<TypeProduct> getProductByIdApi(@PathVariable("id") long id) {
-        Optional<TypeProduct> TestData = repositoryType.findById(id);
+        Optional<TypeProduct> TestData = IRepositoryType.findById(id);
         if (TestData.isPresent()) {
             return new ResponseEntity<>(TestData.get(), HttpStatus.OK);
         } else {
@@ -53,9 +53,9 @@ public class TypeController {
     public ResponseEntity<TypeProduct> createTypeVariantsApi(String nameDescription, String nameType,
                                                     String variants) {
         DiscriptionEncoder temp = new DiscriptionEncoder(variants);
-        String descriptionFeatures = temp.setMassiveParam();
+        String descriptionFeatures = temp.getMassiveQuery();
         try {
-            TypeProduct _product = repositoryType
+            TypeProduct _product = IRepositoryType
                     .save(new TypeProduct(nameDescription,nameType,descriptionFeatures));
             return new ResponseEntity<>(_product, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -67,9 +67,9 @@ public class TypeController {
     public ResponseEntity<TypeProduct> createTypeApi(String nameDescription, String nameType,
                                                             String type) {
         DiscriptionEncoder temp = new DiscriptionEncoder(type);
-        String descriptionFeatures = temp.setValueParam();
+        String descriptionFeatures = temp.getTypeQuery();
         try {
-            TypeProduct _product = repositoryType
+            TypeProduct _product = IRepositoryType
                     .save(new TypeProduct(nameDescription,nameType,descriptionFeatures));
             return new ResponseEntity<>(_product, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -79,15 +79,13 @@ public class TypeController {
     @ApiOperation(value = "Редактирование типа")
     @PutMapping("/swagger/type/{id}")
     public ResponseEntity<TypeProduct> updateProductApi(@PathVariable("id") long id, @RequestBody TypeProduct typeProdcut) {
-        Optional<TypeProduct> testData = repositoryType.findById(id);
-
+        Optional<TypeProduct> testData = IRepositoryType.findById(id);
         if (testData.isPresent()) {
             TypeProduct _typeProduct = testData.get();
             _typeProduct.setId(typeProdcut.getId());
             _typeProduct.setNameType(typeProdcut.getNameType());
             _typeProduct.setDescriptionFeatures(typeProdcut.getDescriptionFeatures());
-
-            return new ResponseEntity<>(repositoryType.save(_typeProduct), HttpStatus.OK);
+            return new ResponseEntity<>(IRepositoryType.save(_typeProduct), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -97,7 +95,7 @@ public class TypeController {
     @DeleteMapping("/swagger/type/{id}")
     public ResponseEntity<HttpStatus> deleteProductApi(@PathVariable("id") long id) {
         try {
-            repositoryType.deleteById(id);
+            IRepositoryType.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

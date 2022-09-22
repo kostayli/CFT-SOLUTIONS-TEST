@@ -6,7 +6,7 @@ import com.example.cft.model.Product;
 
 import java.util.List;
 
-public interface RepositoryProduct extends JpaRepository<Product, Long> {
+public interface IRepositoryProduct extends JpaRepository<Product, Long> {
     List<Product> findAllByIdType(long id);
 }
 
